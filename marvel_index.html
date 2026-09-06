@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Infinity Saga — A Viewing Dossier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12141a;
+    --panel:#1b1e26;
+    --panel-alt:#20232d;
+    --ink:#eef0f0;
+    --ink-muted:#8c92a3;
+    --gold:#c9a227;
+    --gold-dim:#8f7422;
+    --teal:#3f8a92;
+    --teal-dim:#2c6169;
+    --line:rgba(255,255,255,0.09);
+    --line-strong:rgba(255,255,255,0.18);
+    --phase1:#3a6ea5;
+    --phase2:#6a3f8f;
+    --phase3:#a5313a;
+    --space:#3a6ea5;
+    --mind:#c9b23a;
+    --reality:#a5313a;
+    --power:#6a3f8f;
+    --time:#3f8f5c;
+    --soul:#d47a2e;
+    --all:#c9a227;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+  }
+  .page{
+    max-width:760px;
+    margin:0 auto;
+    padding:3rem 1.5rem 5rem;
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    border:1px solid var(--line-strong);
+    background:var(--panel);
+    padding:1.75rem 1.75rem 1.5rem;
+    position:relative;
+  }
+  .masthead::before{
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0;
+    height:3px;
+    background:linear-gradient(90deg, var(--phase1) 0 33%, var(--phase2) 33% 66%, var(--phase3) 66% 100%);
+  }
+  .file-code{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.06em;
+    color:var(--gold);
+    margin:0 0 0.9rem;
+  }
+  .masthead h1{
+    font-size:clamp(1.5rem, 4vw, 2.05rem);
+    font-weight:600;
+    margin:0 0 0.6rem;
+    letter-spacing:-0.01em;
+  }
+  .masthead p{
+    margin:0;
+    color:var(--ink-muted);
+    max-width:52ch;
+    font-size:0.98rem;
+  }
+  .meta-strip{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.4rem 1.2rem;
+    margin-top:1.25rem;
+    padding-top:1rem;
+    border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-muted);
+  }
+  .meta-strip strong{ color:var(--ink); font-weight:500; }
+
+  /* ---------- controls ---------- */
+  .controls{
+    margin-top:1.75rem;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    gap:1rem;
+  }
+  .tab-group{ display:flex; gap:0; border:1px solid var(--line-strong); }
+  .tab-group button{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.02em;
+    background:var(--panel);
+    color:var(--ink-muted);
+    border:none;
+    padding:0.6rem 1rem;
+    cursor:pointer;
+    border-right:1px solid var(--line);
+  }
+  .tab-group button:last-child{ border-right:none; }
+  .tab-group button:hover{ color:var(--ink); }
+  .tab-group button.active{
+    background:var(--panel-alt);
+    color:var(--gold);
+  }
+  .tab-group button:focus-visible{ outline:2px solid var(--gold); outline-offset:-2px; }
+
+  .phase-filter{ display:flex; flex-wrap:wrap; gap:0.4rem; }
+  .phase-filter button{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    background:transparent;
+    color:var(--ink-muted);
+    border:1px solid var(--line);
+    padding:0.45rem 0.75rem;
+    cursor:pointer;
+  }
+  .phase-filter button:hover{ border-color:var(--line-strong); color:var(--ink); }
+  .phase-filter button.active{
+    border-color:var(--gold-dim);
+    color:var(--gold);
+  }
+  .phase-filter button:focus-visible{ outline:2px solid var(--gold); outline-offset:1px; }
+
+  .count-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-muted);
+    margin:0.9rem 0 0;
+  }
+
+  /* ---------- ledger ---------- */
+  #ledger{ margin-top:1.5rem; display:flex; flex-direction:column; gap:0.9rem; }
+
+  .file{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--line);
+    overflow:hidden;
+  }
+  .file:hover{ border-color:var(--line-strong); }
+
+  .file-tab{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0.6rem 1rem;
+    background:var(--panel-alt);
+    border-bottom:1px solid var(--line);
+  }
+  .file-no{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--gold);
+    letter-spacing:0.04em;
+  }
+  .stamp-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-muted);
+    background:transparent;
+    border:1px solid var(--line);
+    padding:0.3rem 0.6rem;
+    cursor:pointer;
+  }
+  .stamp-btn:hover{ color:var(--ink); border-color:var(--line-strong); }
+  .stamp-btn:focus-visible{ outline:2px solid var(--gold); outline-offset:1px; }
+  .stamp-btn.on{ color:var(--teal); border-color:var(--teal-dim); }
+
+  .file-body{ padding:1.1rem 1.2rem 1.25rem; display:flex; gap:1rem; }
+  .poster-box{
+    flex:none;
+    width:64px;
+    height:92px;
+    background:var(--panel-alt);
+    border:1px solid var(--line-strong);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  .poster-mono{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:1.15rem;
+    font-weight:600;
+    color:var(--gold-dim);
+    letter-spacing:0.03em;
+  }
+  .poster-bars{ display:flex; flex-direction:column; gap:2px; margin-top:6px; }
+  .poster-bars span{ width:22px; height:2px; background:var(--line-strong); display:block; }
+  .poster-link{
+    position:absolute;
+    bottom:3px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:8.5px;
+    color:var(--ink-muted);
+    text-decoration:none;
+  }
+  .poster-link:hover{ color:var(--gold); }
+  .file-content{ flex:1; min-width:0; }
+  .file-heading{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:0.5rem 0.75rem;
+    margin-bottom:0.5rem;
+  }
+  .imdb-badge{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color:var(--gold);
+    border:1px solid var(--gold-dim);
+    padding:0.1rem 0.4rem;
+  }
+  .links-row{
+    margin-top:0.85rem;
+    display:flex;
+    gap:1rem;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+  }
+  .links-row a{ color:var(--teal); text-decoration:none; border-bottom:1px solid transparent; }
+  .links-row a:hover{ border-bottom-color:var(--teal); }
+
+  .opinion-box{
+    margin-top:0.9rem;
+    padding:0.7rem 0.85rem;
+    background:var(--panel-alt);
+    border-left:2px solid var(--gold-dim);
+  }
+  .opinion-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.03em;
+    color:var(--gold-dim);
+    display:block;
+    margin-bottom:0.35rem;
+  }
+  .opinion-text{
+    font-size:0.92rem;
+    color:var(--ink);
+    margin:0;
+    max-width:60ch;
+  }
+  .opinion-text.placeholder{
+    color:var(--ink-muted);
+    font-style:italic;
+  }
+  .file-heading h2{
+    font-size:1.08rem;
+    font-weight:600;
+    margin:0;
+  }
+  .file-meta{ display:flex; flex-wrap:wrap; gap:0.4rem; align-items:center; }
+  .year{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-muted);
+  }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    padding:0.15rem 0.45rem;
+    border:1px solid var(--line-strong);
+    color:var(--ink-muted);
+  }
+  .tag.p1{ border-color:var(--phase1); color:var(--phase1); }
+  .tag.p2{ border-color:var(--phase2); color:#b199d1; }
+  .tag.p3{ border-color:var(--phase3); color:#e08a90; }
+  .tag.stone{ display:flex; align-items:center; gap:0.35rem; border-color:var(--line-strong); color:var(--ink-muted); }
+  .stone-dot{ width:7px; height:7px; border-radius:50%; display:inline-block; }
+
+  .blurb{
+    color:var(--ink-muted);
+    font-size:0.93rem;
+    margin:0 0 1rem;
+    max-width:62ch;
+  }
+
+  .meters{ display:flex; flex-direction:column; gap:0.55rem; }
+  .meter{ display:grid; grid-template-columns:110px 1fr 40px; align-items:center; gap:0.6rem; }
+  .meter-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-muted);
+  }
+  .meter-track{
+    height:7px;
+    background:var(--panel-alt);
+    border:1px solid var(--line);
+    position:relative;
+    background-image:repeating-linear-gradient(90deg, transparent 0 9.9%, var(--line) 9.9% 10%);
+  }
+  .meter-fill{ height:100%; }
+  .meter-fill.quality{ background:var(--gold); }
+  .meter-fill.impact{ background:var(--teal); }
+  .meter-value{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-muted);
+    text-align:right;
+  }
+
+  .stamp-overlay{
+    position:absolute;
+    top:1.4rem;
+    right:1.2rem;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:0.12em;
+    color:var(--teal);
+    border:2px solid var(--teal);
+    padding:0.25rem 0.6rem;
+    transform:rotate(-8deg) scale(0.85);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.18s ease, transform 0.18s ease;
+  }
+  .file.reviewed .stamp-overlay{ opacity:0.9; transform:rotate(-8deg) scale(1); }
+  @media (prefers-reduced-motion: reduce){
+    .stamp-overlay{ transition:none; }
+  }
+
+  footer{
+    margin-top:2.5rem;
+    padding-top:1.25rem;
+    border-top:1px solid var(--line);
+    font-size:0.85rem;
+    color:var(--ink-muted);
+  }
+  footer p{ margin:0 0 0.5rem; }
+  footer code{
+    font-family:'IBM Plex Mono', monospace;
+    background:var(--panel);
+    padding:0.1rem 0.35rem;
+    border:1px solid var(--line);
+    color:var(--gold);
+  }
+
+  @media (max-width:520px){
+    .meter{ grid-template-columns:88px 1fr 34px; gap:0.4rem; }
+    .meter-label{ font-size:10px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <p class="file-code mono">FILE // INFINITY-SAGA // 2008&ndash;2019</p>
+    <h1>The Infinity Saga: A Viewing Dossier</h1>
+    <p>Iron Man to Avengers: Endgame, rated on two axes &mdash; how good the film is on its own, and how much of the overall plot you'd miss by skipping it.</p>
+    <div class="meta-strip">
+      <span><strong id="totalCount">22</strong> files</span>
+      <span>2008 &ndash; 2019</span>
+      <span>Phase 1 through 3</span>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="tab-group" id="orderTabs">
+      <button data-order="release" class="active">Theatrical order</button>
+      <button data-order="chrono">Timeline order</button>
+    </div>
+    <div class="phase-filter" id="phaseFilter">
+      <button data-phase="all" class="active">All phases</button>
+      <button data-phase="1">Phase 1</button>
+      <button data-phase="2">Phase 2</button>
+      <button data-phase="3">Phase 3</button>
+    </div>
+  </div>
+  <p class="count-line" id="countLine">Showing 22 of 22 &mdash; sorted by theatrical release</p>
+
+  <main id="ledger"></main>
+
+  <footer>
+    <p>Watchability and Saga impact are personal opinions, not gospel &mdash; open the file in a code editor and edit the numbers in the <code>DATA</code> array to match your own ratings. The IMDb badge is the real public rating, checked recently, but IMDb scores drift over time, so tap "IMDb" on any file for the live number.</p>
+    <p>Poster art isn't embedded directly since movie posters are copyrighted images &mdash; each file's box links out to the real poster and to Google instead.</p>
+  </footer>
+
+</div>
+
+<script>
+  // ---- Edit these to make the ratings your own. quality/importance are out of 10. ----
+  const DATA = [
+    { title:"Iron Man", year:2008, phase:1, release:1, chrono:3, quality:9, importance:10, stone:null, mono:"IM", imdb:7.9,
+      blurb:"Genius billionaire engineer Tony Stark is captured by terrorists while testing his latest weapon. He builds a powered suit of armor to escape captivity, then sets out to refine it and protect the world as Iron Man.", opinion:"" },
+    { title:"The Incredible Hulk", year:2008, phase:1, release:2, chrono:5, quality:6, importance:3, stone:null, mono:"IH", imdb:6.6,
+      blurb:"Scientist Bruce Banner is on the run, searching the globe for a cure to the gamma radiation accident that turns him into the raging Hulk whenever he loses control, while the military closes in.", opinion:"" },
+    { title:"Iron Man 2", year:2010, phase:1, release:3, chrono:4, quality:6, importance:6, stone:null, mono:"I2", imdb:6.9,
+      blurb:"With his identity as Iron Man now public, Tony Stark faces government pressure to hand over his technology, a dangerous new rival, and a personal crisis he's keeping to himself.", opinion:"" },
+    { title:"Thor", year:2011, phase:1, release:4, chrono:6, quality:7, importance:7, stone:"space", mono:"TH", imdb:7.0,
+      blurb:"The arrogant warrior Thor is stripped of his power and exiled to Earth, where he must learn humility before he can reclaim his hammer and stop a growing threat to his home realm of Asgard.", opinion:"" },
+    { title:"Captain America: The First Avenger", year:2011, phase:1, release:5, chrono:1, quality:7.5, importance:8, stone:"space", mono:"CA", imdb:7.8,
+      blurb:"During World War II, scrawny but determined Steve Rogers volunteers for an experimental program that transforms him into a super-soldier, and sets out to stop a Nazi splinter group from unleashing a powerful weapon.", opinion:"" },
+    { title:"The Avengers", year:2012, phase:1, release:6, chrono:7, quality:9.5, importance:10, stone:"space", mono:"AV", imdb:8.0,
+      blurb:"When an old enemy threatens global security, Nick Fury brings together Iron Man, Captain America, Thor, Hulk, Black Widow, and Hawkeye to form a team unlike any the world has seen.", opinion:"" },
+    { title:"Iron Man 3", year:2013, phase:2, release:7, chrono:9, quality:7, importance:5, stone:null, mono:"I3", imdb:7.1,
+      blurb:"After a personal attack leaves his life in ruins, Tony Stark sets out to track down those responsible, a journey that pushes him to his limits as both a hero and a man.", opinion:"" },
+    { title:"Thor: The Dark World", year:2013, phase:2, release:8, chrono:8, quality:5.5, importance:5, stone:"reality", mono:"TD", imdb:6.8,
+      blurb:"Thor teams up with Jane Foster to stop an ancient race of Dark Elves from plunging the entire universe into darkness.", opinion:"" },
+    { title:"Captain America: The Winter Soldier", year:2014, phase:2, release:9, chrono:10, quality:9, importance:8, stone:null, mono:"WS", imdb:7.8,
+      blurb:"As Steve Rogers settles into modern life, a mysterious assassin resurfaces and forces him to uncover a conspiracy hiding in plain sight within S.H.I.E.L.D. itself.", opinion:"" },
+    { title:"Guardians of the Galaxy", year:2014, phase:2, release:10, chrono:11, quality:8.5, importance:6, stone:"power", mono:"GG", imdb:8.0,
+      blurb:"A smuggler, an assassin, a warrior, a gunner, and a talking tree are forced to work together after a botched heist puts them all in danger, and in possession of something very valuable.", opinion:"" },
+    { title:"Avengers: Age of Ultron", year:2015, phase:2, release:11, chrono:13, quality:7, importance:8, stone:"mind", mono:"AU", imdb:7.3,
+      blurb:"When Tony Stark tries to jump-start a dormant peacekeeping program, things go wrong, and the Avengers face their toughest test yet against a powerful new enemy.", opinion:"" },
+    { title:"Ant-Man", year:2015, phase:2, release:12, chrono:14, quality:7, importance:4, stone:null, mono:"AM", imdb:7.3,
+      blurb:"Small-time thief Scott Lang gets a shot at redemption by mastering a suit that lets him shrink in size while gaining super strength, for a high-stakes heist.", opinion:"" },
+    { title:"Captain America: Civil War", year:2016, phase:3, release:13, chrono:15, quality:9, importance:8.5, stone:null, mono:"CW", imdb:7.8,
+      blurb:"Political pressure to regulate the Avengers divides the team into two opposing factions, pitting friend against friend over what they believe is right.", opinion:"" },
+    { title:"Doctor Strange", year:2016, phase:3, release:14, chrono:18, quality:7.5, importance:6, stone:"time", mono:"DS", imdb:7.5,
+      blurb:"After a car accident ends his career, brilliant surgeon Stephen Strange seeks healing and instead discovers a hidden world of magic and alternate dimensions.", opinion:"" },
+    { title:"Guardians of the Galaxy Vol. 2", year:2017, phase:3, release:15, chrono:12, quality:7.5, importance:4, stone:null, mono:"G2", imdb:7.6,
+      blurb:"The Guardians travel deeper into the cosmos while Peter Quill searches for answers about the father he never knew.", opinion:"" },
+    { title:"Spider-Man: Homecoming", year:2017, phase:3, release:16, chrono:17, quality:7.5, importance:4, stone:null, mono:"SH", imdb:7.4,
+      blurb:"Teenager Peter Parker juggles high school with his new responsibilities as Spider-Man, eager to prove himself while facing a dangerous new villain.", opinion:"" },
+    { title:"Thor: Ragnarok", year:2017, phase:3, release:17, chrono:19, quality:8.5, importance:7, stone:null, mono:"TR", imdb:7.9,
+      blurb:"Imprisoned on the far side of the universe, Thor must find a way home in time to stop the destruction of Asgard by the ruthless Hela.", opinion:"" },
+    { title:"Black Panther", year:2018, phase:3, release:18, chrono:16, quality:8.5, importance:5, stone:null, mono:"BP", imdb:7.3,
+      blurb:"After the death of his father, T'Challa returns home to Wakanda to take his place as king, but a challenger from his past threatens both the throne and his country's future.", opinion:"" },
+    { title:"Avengers: Infinity War", year:2018, phase:3, release:19, chrono:20, quality:9.5, importance:10, stone:"all", mono:"IW", imdb:8.4,
+      blurb:"The Avengers and their allies must unite like never before to stop the powerful Thanos before he gathers all six Infinity Stones.", opinion:"" },
+    { title:"Ant-Man and the Wasp", year:2018, phase:3, release:20, chrono:21, quality:7, importance:4, stone:null, mono:"AW", imdb:7.0,
+      blurb:"Scott Lang juggles fatherhood and heroics as he teams up with Hope van Dyne to uncover long-buried secrets from her family's past.", opinion:"" },
+    { title:"Captain Marvel", year:2019, phase:3, release:21, chrono:2, quality:6.5, importance:6, stone:"space", mono:"CM", imdb:6.8,
+      blurb:"In the 1990s, Air Force pilot Carol Danvers becomes one of the universe's most powerful heroes as she's swept into a galactic war and starts to uncover the mystery of her own past.", opinion:"" },
+    { title:"Avengers: Endgame", year:2019, phase:3, release:22, chrono:22, quality:9.5, importance:10, stone:"soul", mono:"EG", imdb:8.4,
+      blurb:"The remaining Avengers must find a way to undo the devastating losses of the past and restore balance to the universe.", opinion:"" }
+  ];
+
+  const stoneNames = { space:"Space", mind:"Mind", reality:"Reality", power:"Power", time:"Time", soul:"Soul", all:"All six" };
+
+  const state = { order:"release", phase:"all", reviewed:new Set() };
+
+  const ledger = document.getElementById("ledger");
+  const countLine = document.getElementById("countLine");
+  const totalCount = document.getElementById("totalCount");
+  totalCount.textContent = DATA.length;
+
+  function pad(n){ return String(n).padStart(2, "0"); }
+
+  function render(){
+    let items = DATA.filter(m => state.phase === "all" || String(m.phase) === state.phase);
+    items = items.slice().sort((a,b) => a[state.order] - b[state.order]);
+
+    ledger.innerHTML = items.map(m => {
+      const id = m.title.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+      const isReviewed = state.reviewed.has(id);
+      const stoneChip = m.stone
+        ? `<span class="tag stone"><span class="stone-dot" style="background:var(--${m.stone})"></span>${stoneNames[m.stone]} stone</span>`
+        : "";
+      const q = encodeURIComponent(`${m.title} ${m.year} film`);
+      const googleUrl = `https://www.google.com/search?q=${q}`;
+      const imdbUrl = `https://www.imdb.com/find/?q=${encodeURIComponent(m.title + " " + m.year)}`;
+      const posterUrl = `https://www.google.com/search?q=${encodeURIComponent(m.title + " " + m.year + " poster")}&tbm=isch`;
+      return `
+        <article class="file${isReviewed ? " reviewed" : ""}" data-id="${id}">
+          <div class="file-tab">
+            <span class="file-no mono">NO. ${pad(m[state.order])}</span>
+            <button class="stamp-btn${isReviewed ? " on" : ""}" data-id="${id}" aria-pressed="${isReviewed}">${isReviewed ? "Reviewed" : "Mark reviewed"}</button>
+          </div>
+          <div class="file-body">
+            <div class="poster-box">
+              <span class="poster-mono">${m.mono}</span>
+              <span class="poster-bars"><span></span><span></span><span></span></span>
+              <a class="poster-link" href="${posterUrl}" target="_blank" rel="noopener">poster &#8599;</a>
+            </div>
+            <div class="file-content">
+              <div class="file-heading">
+                <h2>${m.title}</h2>
+                <div class="file-meta">
+                  <span class="year mono">${m.year}</span>
+                  <span class="tag p${m.phase}">Phase ${m.phase}</span>
+                  <span class="imdb-badge">IMDb ${m.imdb}</span>
+                  ${stoneChip}
+                </div>
+              </div>
+              <p class="blurb">${m.blurb}</p>
+              <div class="meters">
+                <div class="meter">
+                  <span class="meter-label">Watchability</span>
+                  <div class="meter-track"><div class="meter-fill quality" style="width:${m.quality * 10}%"></div></div>
+                  <span class="meter-value">${m.quality}/10</span>
+                </div>
+                <div class="meter">
+                  <span class="meter-label">Saga impact</span>
+                  <div class="meter-track"><div class="meter-fill impact" style="width:${m.importance * 10}%"></div></div>
+                  <span class="meter-value">${m.importance}/10</span>
+                </div>
+              </div>
+              <div class="opinion-box">
+                <span class="opinion-label">Author's opinion</span>
+                <p class="opinion-text${m.opinion ? "" : " placeholder"}">${m.opinion ? m.opinion : "— add your own take here —"}</p>
+              </div>
+              <div class="links-row">
+                <a href="${imdbUrl}" target="_blank" rel="noopener">IMDb &#8599;</a>
+                <a href="${googleUrl}" target="_blank" rel="noopener">Google &#8599;</a>
+              </div>
+            </div>
+          </div>
+          <div class="stamp-overlay">Reviewed</div>
+        </article>`;
+    }).join("");
+
+    const orderLabel = state.order === "release" ? "theatrical release" : "in-story timeline";
+    countLine.textContent = `Showing ${items.length} of ${DATA.length} — sorted by ${orderLabel}`;
+
+    ledger.querySelectorAll(".stamp-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        if (state.reviewed.has(id)) state.reviewed.delete(id);
+        else state.reviewed.add(id);
+        render();
+      });
+    });
+  }
+
+  document.getElementById("orderTabs").addEventListener("click", e => {
+    const btn = e.target.closest("button[data-order]");
+    if (!btn) return;
+    state.order = btn.dataset.order;
+    document.querySelectorAll("#orderTabs button").forEach(b => b.classList.toggle("active", b === btn));
+    render();
+  });
+
+  document.getElementById("phaseFilter").addEventListener("click", e => {
+    const btn = e.target.closest("button[data-phase]");
+    if (!btn) return;
+    state.phase = btn.dataset.phase;
+    document.querySelectorAll("#phaseFilter button").forEach(b => b.classList.toggle("active", b === btn));
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>
